@@ -23,7 +23,6 @@
 		<checkstyle.file>${project.basedir}/checkstyle.xml</checkstyle.file>
 		<source.version>1.7</source.version>
 
-
 		<guava.version>18.0</guava.version>
 		<jdbi.version>2.59</jdbi.version>
 		<joda.time.version>2.7</joda.time.version>
@@ -32,6 +31,8 @@
 		<slf4j.log4j12.version>1.7.6</slf4j.log4j12.version>
 		<commons.beanutils.version>1.9.1</commons.beanutils.version>
 		<assertj.core.version>1.7.1</assertj.core.version>
+		
+		<deploy.repo.url>${env.DEPLOY_URL}</deploy.repo.url>
 	</properties>
 
 	<licenses>
@@ -57,6 +58,12 @@
 			<url>${deploy.repo.url}/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
+
+	<scm>
+		<connection>scm:git:ssh://github.com/alessandroleite/jdbi-ext.git</connection>
+		<developerConnection>scm:git:git@github.com:alessandroleite/jdbi-ext.git</developerConnection>
+		<url>https://github.com/alessandroleite/jdbi-ext.git</url>
+	</scm>
 
 	<dependencies>
 
@@ -215,6 +222,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			
 			<plugin>
 				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
