@@ -30,7 +30,7 @@
 		<h2database.version>1.4.185</h2database.version>
 		<junit.version>4.12</junit.version>
 		<slf4j.log4j12.version>1.7.6</slf4j.log4j12.version>
-		<commons.beanutils.version>1.9.1</commons.beanutils.version>
+		<commons.beanutils.version>1.9.2</commons.beanutils.version>
 		<assertj.core.version>1.7.1</assertj.core.version>
 	</properties>
 
