@@ -34,7 +34,7 @@ public class OptionalContainerFactory implements ContainerFactory<Optional<?>>
     {
         return new ContainerBuilder<Optional<?>>()
         {
-            private Optional<?> _optional;
+            private Optional<?> _optional = Optional.absent();
             
             @Override
             public ContainerBuilder<Optional<?>> add(Object it)
