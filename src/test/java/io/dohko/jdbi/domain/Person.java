@@ -16,30 +16,37 @@
  */
 package io.dohko.jdbi.domain;
 
-import org.joda.time.DateTime;
-
 import com.google.common.base.Objects;
+import org.joda.time.DateTime;
 
 public class Person
 {
-    private String name;
-    private DateTime birthdate;
+    /**
+     * Person's name.
+     */
+    private String _name;
+
+    /**
+     * Person's birthdate.
+     */
+    private DateTime _birthdate;
 
     /**
      * @return the name
      */
     public String getName()
     {
-        return name;
+        return _name;
     }
 
     /**
      * @param name
      *            the name to set
+     * @return the same instance with the new name set
      */
     public Person setName(String name)
     {
-        this.name = name;
+        this._name = name;
         return this;
     }
 
@@ -48,26 +55,26 @@ public class Person
      */
     public DateTime getBirthdate()
     {
-        return birthdate;
+        return _birthdate;
     }
 
     /**
      * @param birthdate
      *            the birthdate to set
+     * @return the same instance with the new birthdate set
      */
     public Person setBirthdate(DateTime birthdate)
     {
-        this.birthdate = birthdate;
+        this._birthdate = birthdate;
         return this;
     }
 
-    
     @Override
     public int hashCode()
     {
-        return Objects.hashCode(this.getName(), this.getBirthdate()) * 31;                
+        return Objects.hashCode(this.getName(), this.getBirthdate()) * 31;
     }
-    
+
     @Override
     public boolean equals(Object obj)
     {
@@ -75,15 +82,13 @@ public class Person
         {
             return true;
         }
-        
-        
+
         if (obj == null || getClass() != obj.getClass())
         {
             return false;
         }
-        
+
         Person other = (Person) obj;
-        return Objects.equal(this.getName(), other.getName()) &&
-               Objects.equal(this.getBirthdate(), other.getBirthdate());
+        return Objects.equal(this.getName(), other.getName()) && Objects.equal(this.getBirthdate(), other.getBirthdate());
     }
 }

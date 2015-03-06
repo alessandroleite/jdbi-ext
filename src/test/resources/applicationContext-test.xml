@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+        Copyright (C) 2015  the original author or authors.
+
+        This program is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License,
+        any later version.
+
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+
+        You should have received a copy of the GNU General Public License
+        along with this program.  If not, see <http://www.gnu.org/licenses/>
+
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+	http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd"
+	default-autowire="byType">
+       
+	<context:component-scan base-package="io.dohko.jdbi" />
+	<context:property-placeholder location="classpath*:*.properties"/>
+	
+	<context:spring-configured />
+	<context:annotation-config />
+	
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" 				value="${jdbc.driverClassName}"/>
+        <property name="url" 							value="${jdbc.url}"/>
+        <property name="username" 						value="${jdbc.username}"/>
+        <property name="password" 						value="${jdbc.password}"/>
+        <property name="maxTotal" 						value="${jdbc.maxActive}"/>
+        <property name="initialSize" 					value="${jdbc.initialSize}"/>
+        <property name="maxIdle" 						value="${jdbc.idle}"/>
+        <property name="maxWaitMillis" 					value="${jdbc.maxWaitMillis}"/>
+        <property name="removeAbandonedOnMaintenance" 	value="${jdbc.removeAbandoned}"/>
+        <property name="RemoveAbandonedTimeout" 		value="${jdbc.removeAbandonedTimeoutInSeconds}"/>
+        <property name="logAbandoned" 					value="${jdbc.logAbandoned}"/>
+        <property name="testOnReturn" 					value="${jdbc.testOnReturn}"/>
+        <property name="testOnBorrow" 					value="${jdbc.testOnBorrow}"/>
+        <property name="testWhileIdle" 					value="${jdbc.testWhileIdle}"/>
+        <property name="validationQuery" 				value="${jdbc.validationQuery}"/>
+    </bean>
+    
+	<bean id="dbi" class="io.dohko.jdbi.spring.beans.factory.DBIFactoryBean2" autowire="byName" depends-on="dataSource"/>
+	
+	<bean id="repositoryFactoryBeanProcessor"  class="io.dohko.jdbi.spring.beans.factory.DBIRepositoryDefinitionBeanFactoryProcessor"  
+	      depends-on="dbi">
+	   <constructor-arg value="io.dohko.jdbi" />
+	</bean>
+	
+</beans>

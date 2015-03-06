@@ -21,7 +21,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<license.header.file>${project.basedir}/HEADER</license.header.file>
 		<checkstyle.file>${project.basedir}/checkstyle.xml</checkstyle.file>
-		<source.version>1.7</source.version>
+		<project.build.targetJdk>1.7</project.build.targetJdk>
 
 		<guava.version>18.0</guava.version>
 		<jdbi.version>2.59</jdbi.version>
@@ -31,7 +31,11 @@
 		<slf4j.log4j12.version>1.7.6</slf4j.log4j12.version>
 		<commons.beanutils.version>1.9.2</commons.beanutils.version>
 		<assertj.core.version>1.7.1</assertj.core.version>
-		
+		<findbugs.jsr305.version>3.0.0</findbugs.jsr305.version>
+		<spring.version>3.2.8.RELEASE</spring.version>
+		<reflections.version>0.9.9</reflections.version>
+		<commons.dbcp2.version>2.0.1</commons.dbcp2.version>
+
 		<deploy.repo.url>${env.DEPLOY_URL}</deploy.repo.url>
 	</properties>
 
@@ -87,6 +91,13 @@
 			<version>${h2database.version}</version>
 			<scope>test</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-dbcp2</artifactId>
+			<version>${commons.dbcp2.version}</version>
+			<scope>test</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>joda-time</groupId>
@@ -117,11 +128,55 @@
 			<artifactId>commons-beanutils</artifactId>
 			<version>${commons.beanutils.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring.version}</version>
+			<optional>true</optional>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>${spring.version}</version>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${spring.version}</version>
+			<optional>true</optional>
+		</dependency>
 
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>${guava.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<version>${findbugs.jsr305.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.reflections</groupId>
+			<artifactId>reflections</artifactId>
+			<version>${reflections.version}</version>
+			<optional>true</optional>
+			<exclusions>
+				<exclusion>
+					<groupId>xml-apis</groupId>
+					<artifactId>xml-apis</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.google.guava</groupId>
+					<artifactId>guava</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 
@@ -222,7 +277,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<plugin>
 				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -230,8 +285,8 @@
 				<version>3.1</version>
 				<configuration>
 					<encoding>${project.build.sourceEncoding}</encoding>
-					<source>${source.version}</source>
-					<target>${source.version}</target>
+					<source>${project.build.targetJdk}</source>
+					<target>${project.build.targetJdk}</target>
 					<showDeprecation>true</showDeprecation>
 					<showWarnings>true</showWarnings>
 					<lineLength>180</lineLength>

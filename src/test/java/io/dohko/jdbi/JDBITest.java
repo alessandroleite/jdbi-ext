@@ -16,38 +16,26 @@
  */
 package io.dohko.jdbi;
 
-import io.dohko.jdbi.args.JodaDateTimeMapper;
-
-import java.util.UUID;
-
-import org.h2.jdbcx.JdbcConnectionPool;
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Before;
-import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
+import org.skife.jdbi.v2.IDBI;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class JDBITest
 {
-    protected JdbcConnectionPool h2Config;
-    protected DBI dbi;
-    
-    {
-        h2Config = JdbcConnectionPool.create("jdbc:h2:mem:" + UUID.randomUUID(), "sa", "sa");
-        dbi = new DBI(h2Config);
-        
-        dbi.registerArgumentFactory(new JodaTimeArgumentFactory());
-        dbi.registerArgumentFactory(new OptionalArgumentFactory());
-        
-        dbi.registerContainerFactory(new OptionalContainerFactory());
-        dbi.registerMapper(new JodaDateTimeMapper());
-    }
+    protected ApplicationContext context;
     
     @Before
     public void setUp()
     {
-        try(Handle handle = dbi.open())
+        context = new ClassPathXmlApplicationContext("classpath*:applicationContext-test.xml");
+        
+        try (Handle handle = context.getBean(IDBI.class).open())
         {
-            handle.createCall("CREATE TABLE person (name varchar(100) not null primary key, birthdate datetime)").invoke();
+            handle.createCall("CREATE TABLE if not exists person (name varchar(100) not null primary key, birthdate datetime)").invoke();
             handle.createStatement("INSERT INTO person (name, birthdate) VALUES (?, ?)")
                   .bind(0, "Isaque")
                   .bind(1, new DateTime(2007, 10, 27, 13, 10))
@@ -64,8 +52,17 @@ public class JDBITest
         }
     }
     
-    protected <T> T makeRepository(Class<T> type)
+    protected <T> T getRepository(Class<T> type)
     {
-        return dbi.open(type);
+        return this.context.getBean(type);
+    }
+    
+    @After
+    public void tearDown()
+    {
+        try(Handle handle =  this.context.getBean(IDBI.class).open())
+        {
+            handle.createScript("DROP TABLE IF EXISTS person").execute();
+        }
     }
 }

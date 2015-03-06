@@ -35,13 +35,14 @@ public class PersonRepositoryTest extends JDBITest
     public void setUp()
     {
         super.setUp();
-        
-        this.repository = this.makeRepository(PersonRepository.class);
+        this.repository = this.getRepository(PersonRepository.class);
     }
     
     @Test
     public void insertOnePerson()
     {
+        assertThat(this.repository).isNotNull();
+        
         final Person person = new Person().setBirthdate(new DateTime()).setName("Miguel");
         this.repository.insert(person);
         
@@ -55,6 +56,8 @@ public class PersonRepositoryTest extends JDBITest
     @Test
     public void findOnePersonWithUknownBirthdate()
     {
+        assertThat(this.repository).isNotNull();
+        
         Optional<Person> person = repository.findByName("Alice");
         
         assertThat(person).isNotNull();

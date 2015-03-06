@@ -50,7 +50,7 @@
 
 		<!-- Naming conventions for class variables. -->
 		<module name="MemberName">
-			<property name="format" value="^[a-z][a-zA-Z0-9]*_$" />
+			<property name="format" value="^_[a-z][a-zA-Z0-9]*$" />
 		</module>
 
 		<!-- Naming conventions local variables. -->
@@ -275,9 +275,9 @@
 		<module name="ModifiedControlVariable" />
 
 		<!-- Avoid redundant throws -->
-		<module name="RedundantThrows">
+		<!-- <module name="RedundantThrows">
 			<property name="allowUnchecked" value="true" />
-		</module>
+		</module> -->
 
 		<!-- Require simple boolean expressions -->
 		<module name="SimplifyBooleanExpression" />
@@ -305,7 +305,7 @@
 		<module name="PackageDeclaration" />
 
 		<!-- Ensures correct layout of JUnit test cases -->
-		<module name="JUnitTestCase" />
+		<!-- <module name="JUnitTestCase" /> -->
 
 		<!-- Enforce the following declaration order: -->
 		<!-- 1. Class variables -->
