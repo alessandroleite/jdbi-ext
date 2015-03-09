@@ -16,10 +16,11 @@
  */
 package io.dohko.jdbi;
 
+import com.google.common.base.Optional;
+
 import org.skife.jdbi.v2.ContainerBuilder;
 import org.skife.jdbi.v2.tweak.ContainerFactory;
 
-import com.google.common.base.Optional;
 
 public class OptionalContainerFactory implements ContainerFactory<Optional<?>>
 {

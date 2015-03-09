@@ -20,11 +20,11 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import com.google.common.base.Optional;
+
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.Argument;
 import org.skife.jdbi.v2.tweak.ArgumentFactory;
-
-import com.google.common.base.Optional;
 
 public class OptionalArgumentFactory implements ArgumentFactory<Optional<Object>>
 {

@@ -16,12 +16,12 @@
  */
 package io.dohko.jdbi.binders;
 
-import io.dohko.jdbi.binders.AnnotationBinderFactory.FieldBinder;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import io.dohko.jdbi.binders.AnnotationBinderFactory.FieldBinder;
 
 import org.skife.jdbi.v2.sqlobject.Binder;
 import org.skife.jdbi.v2.sqlobject.BindingAnnotation;
@@ -31,6 +31,11 @@ import org.skife.jdbi.v2.sqlobject.BindingAnnotation;
 @BindingAnnotation(AnnotationBinderFactory.class)
 public @interface BindBean
 {
+    /**
+     * Returns a type to bind the parameters of a SQL expression.
+     * 
+     * @returns the type to bind the parameters of a SQL expression.
+     */
     Class<? extends Binder<BindBean, ?>> binder() default FieldBinder.class;
 
     /**
@@ -48,14 +53,14 @@ public @interface BindBean
      * 
      * In this case, the object must have an attribute called id.
      * 
-     * @return the parameters found in a bean.
+     * @returns the parameters found in a bean.
      */
     String[] params() default {};
 
     /**
-     * Returns the suffix to
+     * Returns the suffix to a binder.
      * 
-     * @return
+     * @returns the suffix of this binder.
      */
     String suffix() default "";
 }

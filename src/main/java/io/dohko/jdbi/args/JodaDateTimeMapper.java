@@ -16,7 +16,6 @@
  */
 package io.dohko.jdbi.args;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -41,6 +40,14 @@ public class JodaDateTimeMapper extends TypedMapper<DateTime>
         return toJodaDateTime(r, r.getTimestamp(index));
     }
 
+    /**
+     * Returns a {@link DateTime} from a given {@code timestamp} iff it is not <code>null</code>.
+     * 
+     * @param r the {@link ResultSet} from where the timestamp was read
+     * @param timestamp the read {@link Timestamp}
+     * @return a {@link DateTime} if the {@link Timestamp} was not null
+     * @throws SQLException if it was impossible to check if the {@link Timestamp} was a null-sql.
+     */
     private DateTime toJodaDateTime(ResultSet r, Timestamp timestamp) throws SQLException
     {
         return r.wasNull() ? null : new DateTime(timestamp.getTime());

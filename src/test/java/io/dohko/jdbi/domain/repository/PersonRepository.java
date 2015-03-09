@@ -36,14 +36,15 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 import org.skife.jdbi.v2.sqlobject.customizers.SingleValueResult;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
-
 @Repository
 @RegisterMapper(PersonResultSetMapper.class)
 public interface PersonRepository
 {
     /**
-     * Inserts a new {@link Person} in the repository
-     * @param person the {@link Person} to persist. It might not be <code>null</code>.
+     * Inserts a new {@link Person} in the repository.
+     * 
+     * @param person
+     *            the {@link Person} to persist. It might not be <code>null</code>.
      */
     @SqlUpdate("INSERT INTO person (name, birthdate) VALUES (:name, :birthdate)")
     void insert(@BindBean Person person);
@@ -51,7 +52,8 @@ public interface PersonRepository
     /**
      * Finds and returns a person with a given name.
      * 
-     * @param name the name to find.
+     * @param name
+     *            the name to find.
      * @return the {@link Person} found with the given name or {@link Optional#absent()} if no one exists.
      */
     @SqlQuery("SELECT name, birthdate FROM person where lower(name) = lower(:name)")
@@ -60,18 +62,18 @@ public interface PersonRepository
 
     /**
      * Returns all person available in the repository.
+     * 
      * @return a non-null {@link List} with the records available in the repository.
      */
     @SqlQuery("SELECT name, birthdate FROM person order by lower(name)")
     List<Person> listAll();
-    
+
     class PersonResultSetMapper implements ResultSetMapper<Person>
     {
         @Override
         public Person map(int index, ResultSet r, StatementContext ctx) throws SQLException
         {
-            return new Person().setBirthdate(new JodaDateTimeMapper().extractByName(r, "birthdate"))
-                               .setName(r.getString("name"));
+            return new Person().setBirthdate(new JodaDateTimeMapper().extractByName(r, "birthdate")).setName(r.getString("name"));
         }
     }
 }

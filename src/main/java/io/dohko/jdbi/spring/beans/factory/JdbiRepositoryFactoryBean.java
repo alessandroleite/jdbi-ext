@@ -24,10 +24,20 @@ import org.springframework.beans.factory.FactoryBean;
 
 public class JdbiRepositoryFactoryBean<T> implements FactoryBean<T>
 {
+    /**
+     * The repository type. It might not be <code>null</code>.
+     */
     private final Class<T> _repositoryClass;
     
-    private final org.skife.jdbi.v2.DBI _dbi;
+    /**
+     * The {@link IDBI} instance to create the repository.
+     */
+    private final org.skife.jdbi.v2.IDBI _dbi;
     
+    /**
+     * @param dbi a dbi instance. It might not be <code>null</code>.
+     * @param repositoryClazz the repository type. It might not be <code>null</code>.
+     */
     public JdbiRepositoryFactoryBean(@Nonnull org.skife.jdbi.v2.DBI dbi, @Nonnull Class<T> repositoryClazz)
     {
         this._dbi = requireNonNull(dbi);

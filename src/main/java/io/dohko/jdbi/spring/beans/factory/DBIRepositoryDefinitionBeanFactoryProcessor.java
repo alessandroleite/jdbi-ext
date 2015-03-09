@@ -16,9 +16,9 @@
  */
 package io.dohko.jdbi.spring.beans.factory;
 
-import io.dohko.jdbi.stereotype.Repository;
-
 import java.util.Set;
+
+import io.dohko.jdbi.stereotype.Repository;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.TypeAnnotationsScanner;
@@ -33,8 +33,8 @@ import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
-import static com.google.common.base.Preconditions.*;
-import static com.google.common.base.Strings.*;
+import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
  * Dynamically creates a bean for each type annotated with {@link Repository}. The bean is created through the {@link JdbiRepositoryFactoryBean}
@@ -61,14 +61,22 @@ import static com.google.common.base.Strings.*;
  * <h3>Registering this bean processor</h3>
  * 
  * <pre>
- *   &lt;bean id="repositoryFactoryBeanProcessor"  class="io.dohko.jdbi.spring.beans.factory.DBIRepositoryDefinitionBeanFactoryProcessor" depends-on="dbi"&gt;
+ *   &lt;bean id="repositoryFactoryBeanProcessor"  class="io.dohko.jdbi.spring.beans.factory.DBIRepositoryDefinitionBeanFactoryProcessor" 
+ *            depends-on="dbi"&gt;
  *     &lt;constructor-arg value="com.acme" /&gt;
  *   &lt; /bean&gt;
  * </pre>
  */
 public class DBIRepositoryDefinitionBeanFactoryProcessor implements BeanFactoryPostProcessor
 {
+    /**
+     * The base-package to scan the types annotated as a {@link Repository}.
+     */
     private final String _basePackageName;
+    
+    /**
+     * The bean scope. It might not be <code>null</code>.
+     */
     private final String _scope;
     
     /**
@@ -85,6 +93,10 @@ public class DBIRepositoryDefinitionBeanFactoryProcessor implements BeanFactoryP
         checkState(!isNullOrEmpty(this._scope), "The beans' scope must not be null or empty");
     }
     
+    /**
+     * Creates a instance of this class with a singleton bean scope.
+     * @param packageName the base-package name to scan the types annotated with {@link Repository}. It might not be <code>null</code> or empty.
+     */
     public DBIRepositoryDefinitionBeanFactoryProcessor(final String packageName)
     {
         this(packageName, BeanDefinition.SCOPE_SINGLETON);

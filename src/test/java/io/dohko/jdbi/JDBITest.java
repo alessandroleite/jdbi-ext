@@ -26,14 +26,20 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class JDBITest
 {
-    protected ApplicationContext context;
+    /**
+     * The context created at the {@link #setUp()} method.
+     */
+    private ApplicationContext _context;
     
+    /**
+     * Creates the application context and the required resource demanded by the tests.
+     */
     @Before
     public void setUp()
     {
-        context = new ClassPathXmlApplicationContext("classpath*:applicationContext-test.xml");
+        _context = new ClassPathXmlApplicationContext("classpath*:applicationContext-test.xml");
         
-        try (Handle handle = context.getBean(IDBI.class).open())
+        try (Handle handle = _context.getBean(IDBI.class).open())
         {
             handle.createCall("CREATE TABLE if not exists person (name varchar(100) not null primary key, birthdate datetime)").invoke();
             handle.createStatement("INSERT INTO person (name, birthdate) VALUES (?, ?)")
@@ -52,15 +58,25 @@ public class JDBITest
         }
     }
     
-    protected <T> T getRepository(Class<T> type)
+    /**
+     * Returns an instance of the given type.
+     * 
+     * @param requiredType type the bean must match; can be an interface or superclass. <code>null</code>-value is prohibited 
+     * @param <T> type of to be returned.
+     * @return the bean instance that uniquely matches the given object type.  
+     */
+    protected <T> T getBean(Class<T> requiredType)
     {
-        return this.context.getBean(type);
+        return this._context.getBean(requiredType);
     }
     
+    /**
+     * Drops the the tables created at the {@link #setUp()} method.
+     */
     @After
     public void tearDown()
     {
-        try(Handle handle =  this.context.getBean(IDBI.class).open())
+        try (Handle handle = this._context.getBean(IDBI.class).open())
         {
             handle.createScript("DROP TABLE IF EXISTS person").execute();
         }

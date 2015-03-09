@@ -15,7 +15,6 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 package io.dohko.jdbi.binders;
-import io.dohko.jdbi.exceptions.AnyThrow;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -23,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import io.dohko.jdbi.exceptions.AnyThrow;
 
 import org.apache.commons.beanutils.PropertyUtilsBean;
 import org.skife.jdbi.v2.SQLStatement;
@@ -56,7 +57,10 @@ public class AnnotationBinderFactory implements BinderFactory
     // see ColonPrefixNamedParamStatementRewriter, ColonPrefixNamedParamStatementRewriter, ConcreteStatementContext
     public static class FieldBinder implements Binder<BindBean, Object>
     {
-        private static final transient Logger LOG = LoggerFactory.getLogger(FieldBinder.class.getName());
+        /**
+         * 
+         */
+        private static final transient Logger LOGGER = LoggerFactory.getLogger(FieldBinder.class.getName());
 
         /**
          * http://kasparov.skife.org/jdbi/api/index.html
@@ -99,7 +103,7 @@ public class AnnotationBinderFactory implements BinderFactory
                         
                         StringBuilder sb = new StringBuilder();
                         
-                        for(Object key :mapValue.keySet())
+                        for (Object key : mapValue.keySet())
                         {
                             sb.append(key).append("=").append(mapValue.get(key)).append(";");
                         }
@@ -111,16 +115,23 @@ public class AnnotationBinderFactory implements BinderFactory
                 }
                 catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
                 {
-                    LOG.error("Error on getting the property [{}] of type [{}]", paramParts[0], arg.getClass().getName());
+                    LOGGER.error("Error on getting the property [{}] of type [{}]", paramParts[0], arg.getClass().getName());
                     
                     AnyThrow.throwUncheked(e);
                 }
             }
         }
 
+        /**
+         * Extracts and returns the parts of a parameter. A parameter has two parts separated by a colon. The first defines the object to work in, and
+         * the second, the property of the object to read. For example, {:pessoa.name}
+         * 
+         * @param param a non-null {@link String} representing a binding parameter.
+         * @return a non-null array with two elements. The first element represents the object and the second the property name.
+         */
         private String[] extractParamParts(String param)
         {
-            String[] result = new String[] { param, param };
+            String[] result = {param, param};
             
             String[] parts = param.split(":");
             
@@ -132,6 +143,11 @@ public class AnnotationBinderFactory implements BinderFactory
             return result;
         }
 
+        /**
+         * Returns the binding parameters of a given SQL expression.
+         * @param sql the SQL expression to extract the parameters
+         * @return a non-null array with the found parameters.
+         */
         String[] extractParams(final String sql)
         {
             final Matcher m = PATTERN.matcher(sql);

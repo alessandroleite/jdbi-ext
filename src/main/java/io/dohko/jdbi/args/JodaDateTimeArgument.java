@@ -31,8 +31,15 @@ import org.skife.jdbi.v2.tweak.Argument;
  */
 public class JodaDateTimeArgument implements Argument
 {
+    /**
+     * 
+     */
     private final DateTime _value;
 
+    /**
+     * Creates a new {@link JodaDateTimeArgument} with the given {@link DateTime}.
+     * @param value the value of this argument
+     */
     public JodaDateTimeArgument(final DateTime value)
     {
         this._value = value;

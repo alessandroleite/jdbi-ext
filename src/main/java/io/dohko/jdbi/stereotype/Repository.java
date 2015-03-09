@@ -16,12 +16,13 @@
  */
 package io.dohko.jdbi.stereotype;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Indicates that an annotated type is a "Repository", originally defined by Domain-Driven Design (Evans, 2003) as "a mechanism for encapsulating

@@ -16,49 +16,60 @@
  */
 package io.dohko.jdbi.domain.repository;
 
-import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.google.common.base.Optional;
-
-import static org.assertj.core.api.Assertions.*;
 
 import io.dohko.jdbi.JDBITest;
 import io.dohko.jdbi.domain.Person;
 
+import org.joda.time.DateTime;
+import org.junit.Before;
+import org.junit.Test;
+
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class PersonRepositoryTest extends JDBITest
 {
-    private PersonRepository repository;
+    /**
+     * The repository instance to use.
+     */
+    private PersonRepository _repository;
     
+    @Override
     @Before
     public void setUp()
     {
         super.setUp();
-        this.repository = this.getRepository(PersonRepository.class);
+        this._repository = this.getBean(PersonRepository.class);
     }
     
+    /**
+     * Tests the insert and retrieve method of the repository.
+     */
     @Test
     public void insertOnePerson()
     {
-        assertThat(this.repository).isNotNull();
+        assertThat(this._repository).isNotNull();
         
         final Person person = new Person().setBirthdate(new DateTime()).setName("Miguel");
-        this.repository.insert(person);
+        this._repository.insert(person);
         
-        Optional<Person> present = this.repository.findByName(person.getName());
+        Optional<Person> present = this._repository.findByName(person.getName());
         
         assertThat(present).isNotNull();
         assertThat(present.isPresent()).isTrue();
         assertThat(present.get()).isEqualTo(person);
     }
     
+    /**
+     * Tests if an unknown person birthdate is represented as <code>null</code>.  
+     */
     @Test
     public void findOnePersonWithUknownBirthdate()
     {
-        assertThat(this.repository).isNotNull();
+        assertThat(this._repository).isNotNull();
         
-        Optional<Person> person = repository.findByName("Alice");
+        Optional<Person> person = _repository.findByName("Alice");
         
         assertThat(person).isNotNull();
         assertThat(person.isPresent()).isTrue();
