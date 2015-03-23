@@ -70,7 +70,8 @@
 	</scm>
 
 	<dependencies>
-
+	
+        <!-- Test dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -99,6 +100,7 @@
 			<scope>test</scope>
 		</dependency>
 
+        <!-- Compile dependencies -->
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
@@ -130,6 +132,18 @@
 		</dependency>
 		
 		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<version>${findbugs.jsr305.version}</version>
+		</dependency>
+		
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
 			<version>${spring.version}</version>
@@ -148,18 +162,6 @@
 			<artifactId>spring-context-support</artifactId>
 			<version>${spring.version}</version>
 			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>${guava.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>jsr305</artifactId>
-			<version>${findbugs.jsr305.version}</version>
 		</dependency>
 		
 		<dependency>

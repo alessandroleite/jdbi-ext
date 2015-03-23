@@ -20,6 +20,7 @@ import io.dohko.jdbi.JodaTimeArgumentFactory;
 import io.dohko.jdbi.OptionalArgumentFactory;
 import io.dohko.jdbi.OptionalContainerFactory;
 import io.dohko.jdbi.args.JodaDateTimeMapper;
+import io.dohko.jdbi.util.BigIntegerMapper;
 
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.spring.DBIFactoryBean;
@@ -38,7 +39,8 @@ public class DBIFactoryBean2 extends DBIFactoryBean
         dbi.registerArgumentFactory(new JodaTimeArgumentFactory());
         dbi.registerArgumentFactory(new OptionalArgumentFactory());
         dbi.registerContainerFactory(new OptionalContainerFactory());
-
+        
+        dbi.registerMapper(new BigIntegerMapper());
         dbi.registerMapper(new JodaDateTimeMapper());
 
         return dbi;
