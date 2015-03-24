@@ -16,6 +16,8 @@
  */
 package io.dohko.jdbi.spring.beans.factory;
 
+import javax.sql.DataSource;
+
 import io.dohko.jdbi.JodaTimeArgumentFactory;
 import io.dohko.jdbi.OptionalArgumentFactory;
 import io.dohko.jdbi.OptionalContainerFactory;
@@ -31,6 +33,29 @@ import org.skife.jdbi.v2.spring.DBIFactoryBean;
  */
 public class DBIFactoryBean2 extends DBIFactoryBean
 {
+    /**
+     * Instantiates this class.
+     */
+    public DBIFactoryBean2()
+    {
+        super();
+    }
+
+    /**
+     * Creates an instance of this class using the given {@link DataSource}.
+     * 
+     * <p>
+     * Calling this method with a <code>null</code> {@link DataSource} reference demands the invocation of the method
+     * {@link #setDataSource(DataSource)}.
+     * 
+     * @param dataSource
+     *            the data source to use. It may be <code>null</code>, however the method {@link #setDataSource(DataSource)} must be called later.
+     */
+    public DBIFactoryBean2(DataSource dataSource)
+    {
+        this.setDataSource(dataSource);
+    }
+
     @Override
     public Object getObject() throws Exception
     {
@@ -39,7 +64,7 @@ public class DBIFactoryBean2 extends DBIFactoryBean
         dbi.registerArgumentFactory(new JodaTimeArgumentFactory());
         dbi.registerArgumentFactory(new OptionalArgumentFactory());
         dbi.registerContainerFactory(new OptionalContainerFactory());
-        
+
         dbi.registerMapper(new BigIntegerMapper());
         dbi.registerMapper(new JodaDateTimeMapper());
 

@@ -54,10 +54,10 @@
            <property name="validationQuery"                 value="${jdbc.validationQuery}" />
        </bean>
        
-       <bean id="dbi" class="io.dohko.jdbi.spring.beans.factory.DBIFactoryBean2" autowire="byName" depends-on="dataSource" />
+       <!-- <bean id="dbi" class="io.dohko.jdbi.spring.beans.factory.DBIFactoryBean2" autowire="byName" depends-on="dataSource" /> -->
        
        <bean id="repositoryFactoryBeanProcessor" class="io.dohko.jdbi.spring.beans.factory.DBIRepositoryDefinitionBeanFactoryProcessor" 
-             depends-on="dbi">
-           <constructor-arg value="io.dohko.jdbi" />
+             depends-on="dataSource">
+           <constructor-arg value="io.dohko.jdbi" /> <!-- depends-on="dbi" -->
        </bean>
 </beans>

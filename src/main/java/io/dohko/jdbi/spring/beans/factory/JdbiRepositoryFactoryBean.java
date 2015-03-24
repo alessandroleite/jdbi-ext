@@ -43,6 +43,15 @@ public class JdbiRepositoryFactoryBean<T> implements FactoryBean<T>
         this._dbi = requireNonNull(dbi);
         this._repositoryClass = requireNonNull(repositoryClazz);
     }
+    
+    /**
+     * @param repositoryClazz the repository type. It might not be <code>null</code>.
+     * @param dbi a dbi instance. It might not be <code>null</code>.
+     */
+    public JdbiRepositoryFactoryBean(@Nonnull Class<T> repositoryClazz, @Nonnull org.skife.jdbi.v2.DBI dbi)
+    {
+        this(dbi, repositoryClazz);
+    }
 
     @Override
     public T getObject() throws Exception

@@ -18,6 +18,8 @@ package io.dohko.jdbi.spring.beans.factory;
 
 import java.util.Set;
 
+import javax.sql.DataSource;
+
 import io.dohko.jdbi.stereotype.Repository;
 
 import org.reflections.Reflections;
@@ -25,7 +27,11 @@ import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.scanners.TypeElementsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
+import org.skife.jdbi.v2.DBI;
+import org.skife.jdbi.v2.IDBI;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -37,8 +43,9 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
- * Dynamically creates a bean for each type annotated with {@link Repository}. The bean is created through the {@link JdbiRepositoryFactoryBean}
- * class, which has the dependency for the <em>dbi</em> bean.
+ * Dynamically creates a bean for each annotated type with {@link Repository}. The bean is created through the {@link JdbiRepositoryFactoryBean}
+ * class, which has the dependency for the <em>dbi</em> bean. The dbi bean can be previously defined or, we can delegates its definition 
+ * for the application. In this case, we only need to defined a {@link DataSource} bean.  
  * 
  * <p>As usual, the registered beans can be accessed by name or by type. In this case, the name is the simple type name starting with a lower case
  * character. For instance, the bean's name for the type <code>com.acme.FooRepository</code> is <em>fooRepository</em>.
@@ -52,8 +59,8 @@ import static com.google.common.base.Strings.isNullOrEmpty;
  *   &#x40;Repository
  *   public interface FooRepository
  *   {
- *       &#x40;SqlQuery("SELECT * FROM bar where x = true")
- *       Bar getBar();
+ *       &#x40;SqlQuery("SELECT * FROM bar where x = :foo")
+ *       Bar getBar(Object foo);
  *   }
  * </pre>
  * 
@@ -61,8 +68,8 @@ import static com.google.common.base.Strings.isNullOrEmpty;
  * <h3>Registering this bean processor</h3>
  * 
  * <pre>
- *   &lt;bean id="repositoryFactoryBeanProcessor"  class="io.dohko.jdbi.spring.beans.factory.DBIRepositoryDefinitionBeanFactoryProcessor" 
- *            depends-on="dbi"&gt;
+ *   &lt;bean id="repositoryFactoryBeanProcessor"  class="io.dohko.jdbi.spring.beans.factory.DBIRepositoryDefinitionBeanFactoryProcessor"
+ *            depends-on="dataSource" &gt;
  *     &lt;constructor-arg value="com.acme" /&gt;
  *   &lt; /bean&gt;
  * </pre>
@@ -108,7 +115,9 @@ public class DBIRepositoryDefinitionBeanFactoryProcessor implements BeanFactoryP
         Reflections reflections = new Reflections(new ConfigurationBuilder()
                 .addUrls(ClasspathHelper.forPackage(_basePackageName))
                 .addScanners(new TypeElementsScanner(), new TypeAnnotationsScanner()));
-
+        
+        defineIdbiBeanIfUndefined(beanFactory);
+        
         final Set<Class<?>> repositoryTypes = reflections.getTypesAnnotatedWith(Repository.class);
 
         for (Class<?> type : repositoryTypes)
@@ -123,6 +132,37 @@ public class DBIRepositoryDefinitionBeanFactoryProcessor implements BeanFactoryP
             final String beanName = type.getSimpleName().substring(0, 1).toLowerCase().concat(type.getSimpleName().substring(1));
             
             ((DefaultListableBeanFactory) beanFactory).registerBeanDefinition(beanName, bean);
+        }
+    }
+
+    /**
+     * Defines an {@link IDBI} bean if and only if it is undefined.
+     * <p> 
+     * 
+     * @param beanFactory  the bean factory used by the application context
+     */
+    private void defineIdbiBeanIfUndefined(ConfigurableListableBeanFactory beanFactory)
+    {
+        try
+        {
+            beanFactory.getBean(IDBI.class);
+        }
+        catch (NoSuchBeanDefinitionException undefinedIdbiBean)
+        {
+            try
+            {
+                beanFactory.getBean(DBI.class);
+            }
+            catch (NoSuchBeanDefinitionException undefinedDbiBean)
+            {
+                AbstractBeanDefinition beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(DBIFactoryBean2.class)
+                        .addConstructorArgValue(beanFactory.getBean(DataSource.class))
+                        .setAutowireMode(AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE)
+                        .setScope(BeanDefinition.SCOPE_SINGLETON)
+                        .getBeanDefinition();
+                
+                ((DefaultListableBeanFactory) beanFactory).registerBeanDefinition("dbi", beanDefinition);
+            }
         }
     }
 }
