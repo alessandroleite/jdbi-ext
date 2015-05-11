@@ -18,6 +18,7 @@ package io.dohko.jdbi.spring.beans.factory;
 
 import javax.sql.DataSource;
 
+import io.dohko.jdbi.BigIntegerArgumentFactory;
 import io.dohko.jdbi.JodaTimeArgumentFactory;
 import io.dohko.jdbi.OptionalArgumentFactory;
 import io.dohko.jdbi.OptionalContainerFactory;
@@ -63,6 +64,7 @@ public class DBIFactoryBean2 extends DBIFactoryBean
 
         dbi.registerArgumentFactory(new JodaTimeArgumentFactory());
         dbi.registerArgumentFactory(new OptionalArgumentFactory());
+        dbi.registerArgumentFactory(new BigIntegerArgumentFactory());
         dbi.registerContainerFactory(new OptionalContainerFactory());
 
         dbi.registerMapper(new BigIntegerMapper());
