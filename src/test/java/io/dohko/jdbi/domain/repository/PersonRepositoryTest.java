@@ -62,7 +62,7 @@ public class PersonRepositoryTest extends JDBITest
     }
     
     /**
-     * Tests if an unknown person birthdate is represented as <code>null</code>.  
+     * Tests if an unknown person birthday is represented as <code>null</code>.  
      */
     @Test
     public void findOnePersonWithUknownBirthdate()

@@ -129,13 +129,23 @@ public class DBIRepositoryDefinitionBeanFactoryProcessor implements BeanFactoryP
                     .addConstructorArgValue(type)
                     .getBeanDefinition();
 
-            final String beanName = type.getSimpleName().substring(0, 1).toLowerCase().concat(type.getSimpleName().substring(1));
+            final String beanName = getBeanNameFor(type);
             
             ((DefaultListableBeanFactory) beanFactory).registerBeanDefinition(beanName, bean);
         }
     }
 
-    /**
+    private String getBeanNameFor(Class<?> type) 
+    {
+    	String name = type.getAnnotation(Repository.class).value();
+        final String beanName = name == null || name.trim().isEmpty() ?
+        		  type.getSimpleName().substring(0, 1).toLowerCase().concat(type.getSimpleName().substring(1)) :
+        		  name;
+
+		return beanName;
+	}
+
+	/**
      * Defines an {@link IDBI} bean if and only if it is undefined.
      * <p> 
      * 
